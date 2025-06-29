@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Generator Stempel Dokter</title>
+    <style>
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .input-group {
+        margin: 10px 0;
+        display: flex;
+        flex-direction: column;
+      }
+      .input-group label {
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      .input-group input {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+      }
+      button {
+        background-color: #0066cc;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 10px 0;
+        font-size: 16px;
+      }
+      button:hover {
+        background-color: #0052a3;
+      }
+      #preview {
+        margin-top: 20px;
+      }
+      canvas {
+        border: 1px solid #ccc;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Generator Stempel Dokter</h2>
+
+      <div class="input-group">
+        <label>Nama Dokter:</label>
+        <input
+          type="text"
+          id="doctorName"
+          placeholder="Contoh: dr. Afri Amorrinto"
+          value="dr. Afri Amorrinto"
+          onchange="generateStamp()"
+        />
+      </div>
+
+      <div class="input-group">
+        <label>Nomor SIP:</label>
+        <input
+          type="text"
+          id="sipNumber"
+          placeholder="Contoh: 449.4/4172-P-Izin/DU/10.22/DINKES"
+          value="SIP: 449.4/4172-P-Izin/DU/10.22/DINKES"
+          onchange="generateStamp()"
+        />
+      </div>
+
+      <button onclick="downloadStamp()">Download Stempel</button>
+
+      <div id="preview">
+        <canvas id="stampCanvas" width="600" height="200"></canvas>
+      </div>
+    </div>
+
+    <script>
+      const canvas = document.getElementById('stampCanvas');
+      const ctx = canvas.getContext('2d');
+
+      function generateStamp() {
+        // Clear canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Get input values
+        const doctorName = document.getElementById('doctorName').value;
+        const sipNumber = document.getElementById('sipNumber').value;
+
+        // Set font styles
+        ctx.fillStyle = 'blue';
+        ctx.textAlign = 'center';
+        
+        // Draw doctor name
+        ctx.font = '36px Arial';
+        ctx.fillText(doctorName, canvas.width/2, 70);
+
+        // Measure SIP text width
+        ctx.font = '24px Arial';
+        const sipWidth = ctx.measureText(sipNumber).width;
+        
+        // Calculate line start and end positions based on SIP text width
+        const padding = 20; // Padding on each side of the text
+        const lineStart = (canvas.width - sipWidth) / 2 - padding;
+        const lineEnd = (canvas.width + sipWidth) / 2 + padding;
+
+        // Draw horizontal line
+        ctx.beginPath();
+        ctx.moveTo(lineStart, 85);
+        ctx.lineTo(lineEnd, 85);
+        ctx.strokeStyle = 'blue';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Draw SIP number
+        ctx.fillText(sipNumber, canvas.width/2, 120);
+      }
+
+      function downloadStamp() {
+        const link = document.createElement('a');
+        link.download = 'stempel-dokter.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      }
+
+      // Generate stamp when page loads
+      window.onload = generateStamp;
+    </script>
+  </body>
+</html>
