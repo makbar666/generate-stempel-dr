@@ -30,7 +30,7 @@
         border: none;
         border-radius: 4px;
         cursor: pointer;
-        margin: 10px 0;
+        margin: 10px 5px 10px 0;
         font-size: 16px;
       }
       button:hover {
@@ -65,11 +65,12 @@
           type="text"
           id="sipNumber"
           placeholder="Contoh: 449.4/4172-P-Izin/DU/10.22/DINKES"
-          value="SIP: 449.4/4172-P-Izin/DU/10.22/DINKES"
+          value="SIP: 332.432/233/III/DPMPTSP/2022"
           onchange="generateStamp()"
         />
       </div>
 
+      <button onclick="randomSIP()">Random SIP</button>
       <button onclick="downloadStamp()">Download Stempel</button>
 
       <div id="preview">
@@ -116,6 +117,19 @@
 
         // Draw SIP number
         ctx.fillText(sipNumber, canvas.width/2, 120);
+      }
+
+      function randomSIP() {
+        const romawi = ["I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII"];
+        const tahun = Math.floor(Math.random() * (2024 - 2018 + 1)) + 2018;
+        const rom = romawi[Math.floor(Math.random() * romawi.length)];
+        const depan1 = Math.floor(Math.random() * 900 + 100); // contoh 3 digit acak
+        const depan2 = Math.floor(Math.random() * 900 + 100);
+        const nomor = Math.floor(Math.random() * 999 + 100); // contoh nomor acak
+
+        const sip = `SIP: ${depan1}.${depan2}/${nomor}/${rom}/DPMPTSP/${tahun}`;
+        document.getElementById('sipNumber').value = sip;
+        generateStamp();
       }
 
       function downloadStamp() {
